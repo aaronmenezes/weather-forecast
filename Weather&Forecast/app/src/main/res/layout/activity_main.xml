@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.view.MainActivity">
+
+
+    <ImageView
+        android:id="@+id/city_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"  />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:weightSum="6">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/card_bg" >
+
+            <TextView
+                android:id="@+id/city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="25sp"
+                android:textAlignment="center"
+                android:text="Mumbai" />
+        </RelativeLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/cur_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="fitXY" />
+                <TextView
+                    android:id="@+id/cur_weather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:text="smoke" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/cur_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="50sp"
+                android:text="31 C" />
+
+            <TextView
+                android:id="@+id/cur_feels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="Feels like 38" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/card_bg"
+                android:backgroundTint="@color/greybg"
+                app:columnCount="3"
+                app:rowCount="2">
+
+                <TextView
+                    android:id="@+id/cur_wind"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_wind_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cur_humidity"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_humidity_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cur_uv"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_uv_index_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cur_pressure"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_pressure_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cur_visibility"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_visibility_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cur_dew"
+                    android:layout_width="0dp"
+                    app:layout_columnWeight="1"
+                    android:layout_height="0dp"
+                    app:layout_rowWeight="1"
+                    android:text="@string/cur_dew_point_lbl"
+                    android:textAlignment="gravity"
+                    android:gravity="bottom"
+                    android:textSize="18sp" />
+
+            </androidx.gridlayout.widget.GridLayout>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/card_bg">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hour_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:scrollbars="horizontal"/>
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+    </LinearLayout>
+
+</RelativeLayout>

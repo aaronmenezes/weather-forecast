@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Weather&amp;Forecast</string>
+    <string name="feels_lbl">Feels Like</string>
+    <string name="celcius"> ° C</string>
+    <string name="AM">AM</string>
+    <string name="PM">PM</string>
+    <string name="cur_wind_lbl">Wind:</string>
+    <string name="cur_humidity_lbl">Humidity:</string>
+    <string name="cur_uv_index_lbl">UV index:</string>
+    <string name="cur_pressure_lbl">Pressure:</string>
+    <string name="cur_visibility_lbl">Visibility:</string>
+    <string name="cur_dew_point_lbl">Dew Point:</string>
+    <string name="img_icon_url">https://openweathermap.org/img/wn/%1$s.png</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

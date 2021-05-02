@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/forecastList">
+
+    <fragment
+        android:id="@+id/forecastList"
+        android:name="com.kyser.weatherforecast.ui.view.ForecastList"
+        android:label="fragment_forecast_list"
+        tools:layout="@layout/fragment_forecast_list" >
+        <action
+            android:id="@+id/action_forecastList_to_forecastDetails"
+            app:destination="@id/forecastDetails" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forecastDetails"
+        android:name="com.kyser.weatherforecast.ui.view.ForecastDetails"
+        android:label="fragment_forecast_details"
+        tools:layout="@layout/fragment_forecast_details" />
+</navigation>
