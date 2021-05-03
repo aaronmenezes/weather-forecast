@@ -13,5 +13,10 @@
     <string name="img_icon_url">https://openweathermap.org/img/wn/%1$s.png</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pressure_lbl">Pressure</string>
+    <string name="humidity_lbl">Humidity</string>
+    <string name="uv_index_lbl">UV Index</string>
+    <string name="sunrise_lbl">Sunrise</string>
+    <string name="sunset_lbl">Sunset</string>
 
 </resources>

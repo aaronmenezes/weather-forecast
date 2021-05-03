@@ -64,8 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:text="smoke" />
+                    android:textSize="20sp"  />
             </LinearLayout>
 
             <TextView
@@ -73,8 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="50sp"
-                android:text="31 C" />
+                android:textSize="50sp"  />
 
             <TextView
                 android:id="@+id/cur_feels"
@@ -92,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/card_bg"
-                android:backgroundTint="@color/greybg"
+                android:backgroundTint="@color/forecast_grey"
                 app:columnCount="3"
                 app:rowCount="2">
 

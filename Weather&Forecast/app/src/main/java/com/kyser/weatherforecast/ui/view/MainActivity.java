@@ -62,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
             mainBinding.curDew.setText(new StringBuilder().append(getString(R.string.cur_dew_point_lbl)).append(dewPointCalc(currentModel.getMain().getTemp(), currentModel.getMain().getHumidity())).toString());
             Glide.with(mainBinding.getRoot()).load(getString(R.string.img_icon_url,currentModel.getWeather().get(0).getIcon())).into(mainBinding.curIcon);
         });
-        vm.getmForecastObservable().observe(this,forecast ->{
-            setHourlyList(forecast.getHourly());
-        });
+        vm.getmForecastObservable().observe(this,forecast -> setHourlyList(forecast.getHourly()));
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        assert navHostFragment != null;
         navHostFragment.getChildFragmentManager().getFragments();
 
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     }
 
     private void checkPermission() {
