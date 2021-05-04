@@ -2,9 +2,16 @@ package com.kyser.weatherforecast.services;
 
 import android.util.Log;
 
+import com.kyser.weatherforecast.BuildConfig;
 import com.kyser.weatherforecast.model.CurrentModel;
 import com.kyser.weatherforecast.model.Forecast;
 import com.kyser.weatherforecast.model.Weather;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
@@ -15,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WeatherService {
 
-    private final String APIKEY = "e122df3803bdbf78640b54ddb91d7440";
+    private static final String APIKEY = BuildConfig.WEATHER_APIKEY;
     private static WeatherService instance;
     private Retrofit mRetrofitInstance;
     private ForecastService mForecastService;
@@ -38,6 +45,11 @@ public class WeatherService {
                 .build();
 
         mForecastService = mRetrofitInstance.create(ForecastService.class);
+        generatePiKey();
+    }
+
+    private void generatePiKey() {
+
     }
 
     public void  getWeatherService(String city, final MutableLiveData<CurrentModel> model){

@@ -2,6 +2,7 @@ package com.kyser.weatherforecast.services;
 
 import android.util.Log;
 
+import com.kyser.weatherforecast.BuildConfig;
 import com.kyser.weatherforecast.model.wallpaper.ApiResult;
 
 import retrofit2.Call;
@@ -11,7 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WallpaperService {
-    private String APIKEY = "zn9-paaVsuwJX0EgaxRXNaOuWeCdhWjXRXCiYZ6yVtc";
+    private String APIKEY = BuildConfig.WALLPAPER_APIKEY;
     private static WallpaperService serivce;
     private Retrofit mRetrofitInstance;
     private CityWallpaperService mCityWallpaperService;

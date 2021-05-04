@@ -4,12 +4,18 @@ android {
     compileSdkVersion 28
     buildToolsVersion "30.0.2"
 
+    def apikeyPropertiesFile = rootProject.file("secrets.properties")
+    def apikeyProperties = new Properties()
+    apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
     defaultConfig {
         applicationId "com.kyser.weatherforecast"
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "WEATHER_APIKEY", apikeyProperties['WEATHER_APIKEY'])
+        buildConfigField("String", "WALLPAPER_APIKEY", apikeyProperties['WALLPAPER_APIKEY'])
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -19,6 +25,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
