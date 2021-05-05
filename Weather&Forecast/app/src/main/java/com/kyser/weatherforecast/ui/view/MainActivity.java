@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         startSplashAnimation();
         CurrentWeather vm = ViewModelProviders.of(this).get(CurrentWeather.class);
         vm.getmCurrentWeatherObservable().observe(this, currentModel -> {
+            setCurrentWeatherValues(currentModel);
             mainBinding.splash.animate().translationYBy(2000).setDuration(2000).setInterpolator(new AccelerateInterpolator()).start();
         });
         vm.getmForecastObservable().observe(this,forecast -> setHourlyList(forecast.getHourly()));
