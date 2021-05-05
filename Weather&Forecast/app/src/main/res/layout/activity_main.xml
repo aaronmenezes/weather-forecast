@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.view.MainActivity">
 
-
     <ImageView
         android:id="@+id/city_background"
         android:layout_width="match_parent"
@@ -197,4 +196,41 @@
             app:navGraph="@navigation/nav_graph" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/splash_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/splash_sun" />
+
+        <TextView
+            android:id="@+id/splash_lbl_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fetching Weather"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/splash_img"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/splash_text"/>
+
+        <TextView
+            android:id="@+id/splash_lbl_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weather &amp; Forecast"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="50dp"
+            android:textStyle="bold"
+            android:textSize="38sp"
+            android:textColor="@color/splash_text"/>
+    </RelativeLayout>
 </RelativeLayout>

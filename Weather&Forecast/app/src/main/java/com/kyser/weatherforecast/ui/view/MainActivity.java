@@ -24,6 +24,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.kyser.weatherforecast.R;
@@ -57,8 +60,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         mHourlyListAdaptor = new HourlyAdaptor(this);
         setLocationManger();
         CurrentWeather vm = ViewModelProviders.of(this).get(CurrentWeather.class);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.splash_icon);
+        anim.setRepeatMode(Animation.INFINITE);
+        mainBinding.splashImg.startAnimation(anim);
         vm.getmCurrentWeatherObservable().observe(this, currentModel -> {
-            System.out.println("::::::::::::::::::::::::::::::::::::::current");
             mainBinding.curWeather.setText(StringUtils.capitalize(currentModel.getWeather().get(0).getDescription()));
             mainBinding.curTemp.setText(new StringBuilder().append(currentModel.getMain().getTemp()).append(" ").append(getString(R.string.celcius)).toString());
             mainBinding.curFeels.setText(new StringBuilder().append(getString(R.string.feels_lbl)).append(" ").append(currentModel.getMain().getFeels_like()).append(" ").append(getString(R.string.celcius)).toString());
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             mainBinding.curVisibility.setText(new StringBuilder().append(getString(R.string.cur_visibility_lbl)).append(currentModel.getVisibility()).toString());
             mainBinding.curDew.setText(new StringBuilder().append(getString(R.string.cur_dew_point_lbl)).append(dewPointCalc(currentModel.getMain().getTemp(), currentModel.getMain().getHumidity())).toString());
             Glide.with(mainBinding.getRoot()).load(getString(R.string.img_icon_url,currentModel.getWeather().get(0).getIcon())).into(mainBinding.curIcon);
+            //mainBinding.splash.animate().translationYBy(2000).setDuration(2000).setInterpolator(new AccelerateInterpolator()).start();
         });
         vm.getmForecastObservable().observe(this,forecast -> setHourlyList(forecast.getHourly()));
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -136,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
 
     private void setHourlyList(List<Hourly> hourly) {
-        System.out.println("::::::::::::::::::::::::::::::::::::::forecast");
         mainBinding.hourList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL,false));
         mainBinding.hourList.setAdapter(mHourlyListAdaptor);
         mHourlyListAdaptor.setHourlyList(hourly);

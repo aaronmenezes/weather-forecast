@@ -6,4 +6,5 @@
     <color name="greybg">#C9E6E6E6</color>
     <color name="forecast_grey">#BEDCDCDC</color>
     <color name="textcolor">#10171E</color>
+    <color name="splash_text">#FFFFFF</color>
 </resources>
