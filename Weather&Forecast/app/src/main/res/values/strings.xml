@@ -18,5 +18,9 @@
     <string name="uv_index_lbl">UV Index</string>
     <string name="sunrise_lbl">Sunrise</string>
     <string name="sunset_lbl">Sunset</string>
+    <string name="gps_access_title">Location disabled</string>
+    <string name="gps_access_desc">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="gps_access_settings">Settings</string>
+    <string name="cancle">Cancel</string>
 
 </resources>

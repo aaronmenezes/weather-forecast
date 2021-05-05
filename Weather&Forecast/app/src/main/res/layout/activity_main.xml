@@ -217,7 +217,6 @@
             android:text="Fetching Weather"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/splash_img"
-            android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/splash_text"/>
 

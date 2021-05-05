@@ -31,6 +31,7 @@ import android.view.animation.AnimationUtils;
 import com.bumptech.glide.Glide;
 import com.kyser.weatherforecast.R;
 import com.kyser.weatherforecast.databinding.ActivityMainBinding;
+import com.kyser.weatherforecast.model.CurrentModel;
 import com.kyser.weatherforecast.model.Hourly;
 import com.kyser.weatherforecast.services.WallpaperService;
 import com.kyser.weatherforecast.ui.view.components.HourlyAdaptor;
@@ -59,27 +60,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         setContentView(mainBinding.getRoot());
         mHourlyListAdaptor = new HourlyAdaptor(this);
         setLocationManger();
+        startSplashAnimation();
         CurrentWeather vm = ViewModelProviders.of(this).get(CurrentWeather.class);
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.splash_icon);
-        anim.setRepeatMode(Animation.INFINITE);
-        mainBinding.splashImg.startAnimation(anim);
         vm.getmCurrentWeatherObservable().observe(this, currentModel -> {
-            mainBinding.curWeather.setText(StringUtils.capitalize(currentModel.getWeather().get(0).getDescription()));
-            mainBinding.curTemp.setText(new StringBuilder().append(currentModel.getMain().getTemp()).append(" ").append(getString(R.string.celcius)).toString());
-            mainBinding.curFeels.setText(new StringBuilder().append(getString(R.string.feels_lbl)).append(" ").append(currentModel.getMain().getFeels_like()).append(" ").append(getString(R.string.celcius)).toString());
-            mainBinding.curWind.setText(new StringBuilder().append(getString(R.string.cur_wind_lbl)).append(currentModel.getWind().getSpeed()).toString());
-            mainBinding.curHumidity.setText(new StringBuilder().append(getString(R.string.cur_humidity_lbl)).append(currentModel.getMain().getHumidity()).toString());
-            mainBinding.curUv.setText(new StringBuilder().append(getString(R.string.cur_uv_index_lbl)).append("1.0").toString());
-            mainBinding.curPressure.setText(new StringBuilder().append(getString(R.string.cur_pressure_lbl)).append(currentModel.getMain().getPressure()).toString());
-            mainBinding.curVisibility.setText(new StringBuilder().append(getString(R.string.cur_visibility_lbl)).append(currentModel.getVisibility()).toString());
-            mainBinding.curDew.setText(new StringBuilder().append(getString(R.string.cur_dew_point_lbl)).append(dewPointCalc(currentModel.getMain().getTemp(), currentModel.getMain().getHumidity())).toString());
-            Glide.with(mainBinding.getRoot()).load(getString(R.string.img_icon_url,currentModel.getWeather().get(0).getIcon())).into(mainBinding.curIcon);
-            //mainBinding.splash.animate().translationYBy(2000).setDuration(2000).setInterpolator(new AccelerateInterpolator()).start();
+            mainBinding.splash.animate().translationYBy(2000).setDuration(2000).setInterpolator(new AccelerateInterpolator()).start();
         });
         vm.getmForecastObservable().observe(this,forecast -> setHourlyList(forecast.getHourly()));
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         assert navHostFragment != null;
         navHostFragment.getChildFragmentManager().getFragments();
+    }
+
+    private void setCurrentWeatherValues(CurrentModel currentModel){
+        mainBinding.curWeather.setText(StringUtils.capitalize(currentModel.getWeather().get(0).getDescription()));
+        mainBinding.curTemp.setText(new StringBuilder().append(currentModel.getMain().getTemp()).append(" ").append(getString(R.string.celcius)).toString());
+        mainBinding.curFeels.setText(new StringBuilder().append(getString(R.string.feels_lbl)).append(" ").append(currentModel.getMain().getFeels_like()).append(" ").append(getString(R.string.celcius)).toString());
+        mainBinding.curWind.setText(new StringBuilder().append(getString(R.string.cur_wind_lbl)).append(currentModel.getWind().getSpeed()).toString());
+        mainBinding.curHumidity.setText(new StringBuilder().append(getString(R.string.cur_humidity_lbl)).append(currentModel.getMain().getHumidity()).toString());
+        mainBinding.curUv.setText(new StringBuilder().append(getString(R.string.cur_uv_index_lbl)).append("1.0").toString());
+        mainBinding.curPressure.setText(new StringBuilder().append(getString(R.string.cur_pressure_lbl)).append(currentModel.getMain().getPressure()).toString());
+        mainBinding.curVisibility.setText(new StringBuilder().append(getString(R.string.cur_visibility_lbl)).append(currentModel.getVisibility()).toString());
+        mainBinding.curDew.setText(new StringBuilder().append(getString(R.string.cur_dew_point_lbl)).append(dewPointCalc(currentModel.getMain().getTemp(), currentModel.getMain().getHumidity())).toString());
+        Glide.with(mainBinding.getRoot()).load(getString(R.string.img_icon_url,currentModel.getWeather().get(0).getIcon())).into(mainBinding.curIcon);
+    }
+
+    private void startSplashAnimation() {
+        mainBinding.splashImg.startAnimation( AnimationUtils.loadAnimation(this, R.anim.splash_icon));
     }
 
     private void setLocationManger() {
@@ -89,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             if (isGPSEnabled) {
                 if (mLocation == null) {
                     mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, this);
-                    Log.v("GPS Enabled", "GPS Enabled");
                     if (mLocationManager != null) {
                         mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         if (mLocation != null) {
@@ -102,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 }
             }
            else showSettingsAlert(this);
-         }
-
+        }
     }
 
     private void getCityWallpaper(String city) {
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     private String updateGeocode(Location location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        List<Address> addresses = null;
+        List<Address> addresses;
         try {
             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
            return addresses.get(0).getLocality();
@@ -159,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        System.out.println("======================="+location.getLongitude()+" "+location.getLongitude());
         mLocation= location;
         String city = updateGeocode(location);
         getCityWallpaper(city);
@@ -168,29 +171,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {  }
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
+    public void onProviderEnabled(String provider) { }
 
     @Override
-    public void onProviderDisabled(String provider) {
-
-    }
+    public void onProviderDisabled(String provider) {  }
 
     public void showSettingsAlert(Context context){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("GPS is settings");
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+        alertDialog.setTitle(R.string.gps_access_title);
+        alertDialog.setMessage(R.string.gps_access_desc);
+        alertDialog.setPositiveButton(R.string.gps_access_settings, (dialog, which) -> {
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             context.startActivity(intent);
         });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.cancle, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
