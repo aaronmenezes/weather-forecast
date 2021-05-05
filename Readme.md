@@ -16,3 +16,7 @@ It also provides hourly weather conditions for the day as well as a 5-day foreca
 
 ## Screenshots
 ![alt text](https://github.com/aaronmenezes/weather-forecast/blob/main/Screenshots/device-a.png)
+
+![alt text](https://github.com/aaronmenezes/weather-forecast/blob/main/Screenshots/device-b.png)
+
+![alt text](https://github.com/aaronmenezes/weather-forecast/blob/main/Screenshots/device-c.png)
