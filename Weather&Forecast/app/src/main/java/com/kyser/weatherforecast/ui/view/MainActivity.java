@@ -1,5 +1,6 @@
 package com.kyser.weatherforecast.ui.view;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -10,8 +11,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.kyser.weatherforecast.R;
@@ -22,29 +34,31 @@ import com.kyser.weatherforecast.ui.view.components.HourlyAdaptor;
 import com.kyser.weatherforecast.ui.viewmodel.CurrentWeather;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener{
 
     private long LOCATION_REFRESH_TIME=1000;
     private float  LOCATION_REFRESH_DISTANCE= 5.5F;
     private ActivityMainBinding mainBinding;
     private HourlyAdaptor mHourlyListAdaptor;
+    private LocationManager mLocationManager;
+    private Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
-        WallpaperService.getInstance().getCityWallpaper("Mumbai", url -> {
-            Glide.with(mainBinding.getRoot()).load(url).into(mainBinding.cityBackground);
-        });
         mHourlyListAdaptor = new HourlyAdaptor(this);
-
-        checkPermission();
-        CurrentWeather vm =ViewModelProviders.of(this).get(CurrentWeather.class);
+        setLocationManger();
+        CurrentWeather vm = ViewModelProviders.of(this).get(CurrentWeather.class);
         vm.getmCurrentWeatherObservable().observe(this, currentModel -> {
+            System.out.println("::::::::::::::::::::::::::::::::::::::current");
             mainBinding.curWeather.setText(StringUtils.capitalize(currentModel.getWeather().get(0).getDescription()));
             mainBinding.curTemp.setText(new StringBuilder().append(currentModel.getMain().getTemp()).append(" ").append(getString(R.string.celcius)).toString());
             mainBinding.curFeels.setText(new StringBuilder().append(getString(R.string.feels_lbl)).append(" ").append(currentModel.getMain().getFeels_like()).append(" ").append(getString(R.string.celcius)).toString());
@@ -60,20 +74,69 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         assert navHostFragment != null;
         navHostFragment.getChildFragmentManager().getFragments();
+    }
+
+    private void setLocationManger() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (checkPermission()){
+            if (isGPSEnabled) {
+                if (mLocation == null) {
+                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, this);
+                    Log.v("GPS Enabled", "GPS Enabled");
+                    if (mLocationManager != null) {
+                        mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (mLocation != null) {
+                            String city = updateGeocode(mLocation);
+                            getCityWallpaper(city);
+                            ViewModelProviders.of(this).get(CurrentWeather.class).updateCityInfo(city, mLocation);
+                            mLocationManager.removeUpdates(this);
+                        }
+                    }
+                }
+            }
+           else showSettingsAlert(this);
+         }
 
     }
 
-    private void checkPermission() {
+    private void getCityWallpaper(String city) {
+        WallpaperService.getInstance().getCityWallpaper(city, url -> {
+            Glide.with(mainBinding.getRoot()).load(url).into(mainBinding.cityBackground);
+        });
+    }
+
+    private String updateGeocode(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+           return addresses.get(0).getLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    @Override
+    protected void onResume() {
+        super.onResume(); setLocationManger();
+    }
+
+
+    private boolean checkPermission() {
         if (ActivityCompat.checkSelfPermission( this,   Manifest.permission.ACCESS_FINE_LOCATION  ) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(  this,   Manifest.permission.ACCESS_COARSE_LOCATION  ) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(  this, new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION  }, 100  ) ;
+            return false;
+        }else {
+            return true;
         }
     }
 
     private void setHourlyList(List<Hourly> hourly) {
+        System.out.println("::::::::::::::::::::::::::::::::::::::forecast");
         mainBinding.hourList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL,false));
         mainBinding.hourList.setAdapter(mHourlyListAdaptor);
         mHourlyListAdaptor.setHourlyList(hourly);
@@ -87,5 +150,46 @@ public class MainActivity extends AppCompatActivity {
 
     public NavController getNavController() {
         return Navigation.findNavController(mainBinding.navHostFragment);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        System.out.println("======================="+location.getLongitude()+" "+location.getLongitude());
+        mLocation= location;
+        String city = updateGeocode(location);
+        getCityWallpaper(city);
+        ViewModelProviders.of(this).get(CurrentWeather.class).updateCityInfo(city, location);
+        mLocationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public void showSettingsAlert(Context context){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle("GPS is settings");
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            context.startActivity(intent);
+        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 }
