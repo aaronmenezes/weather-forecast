@@ -46,8 +46,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LocationListener{
 
-    private long LOCATION_REFRESH_TIME=1000;
-    private float  LOCATION_REFRESH_DISTANCE= 5.5F;
     private ActivityMainBinding mainBinding;
     private HourlyAdaptor mHourlyListAdaptor;
     private LocationManager mLocationManager;
@@ -95,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         if (checkPermission()){
             if (isGPSEnabled) {
                 if (mLocation == null) {
+                    long LOCATION_REFRESH_TIME = 1000;
+                    float LOCATION_REFRESH_DISTANCE = 5.5F;
                     mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, this);
                     if (mLocationManager != null) {
                         mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     }
                 }
             }
-           else showSettingsAlert(this);
+           else if (mLocation==null) showSettingsAlert(this);
         }
     }
 
@@ -130,7 +130,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
     @Override
     protected void onResume() {
-        super.onResume(); setLocationManger();
+        super.onResume();
+        setLocationManger();
     }
 
 
